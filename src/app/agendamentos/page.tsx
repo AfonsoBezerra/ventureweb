@@ -1,59 +1,47 @@
-import { CalendarDays, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Check, Clock, MoreVertical, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function SchedulePage() {
-  const visits = [
+  const agendamentos = [
     {
-      id: 1,
-      date: "2024-02-20",
-      time: "14:00",
+      motivo: "Inspeção elétrica",
       responsavel: "João",
-      reason: "Inspeção elétrica",
-      status: "pendente",
+      data: "19/02/2024",
+      horario: "14:00",
+      status: "Pendente",
+      statusColor: "bg-amber-500 hover:bg-amber-600",
+      acoes: "check-x",
     },
     {
-      id: 2,
-      date: "2024-02-15",
-      time: "09:30",
+      motivo: "Manutenção hidráulica",
       responsavel: "João",
-      reason: "Manutenção hidráulica",
-      status: "confirmado",
+      data: "14/02/2024",
+      horario: "09:30",
+      status: "Confirmado",
+      statusColor: "bg-blue-500 hover:bg-blue-600",
+      acoes: "check-x",
     },
     {
-      id: 3,
-      date: "2024-02-10",
-      time: "11:00",
+      motivo: "Vistoria estrutural",
       responsavel: "João",
-      reason: "Vistoria estrutural",
-      status: "em_processo",
+      data: "09/02/2024",
+      horario: "11:00",
+      status: "Em Processo",
+      statusColor: "bg-purple-500 hover:bg-purple-600",
+      acoes: "clock",
     },
     {
-      id: 4,
-      date: "2024-02-05",
-      time: "16:00",
+      motivo: "Reparo no ar condicionado",
       responsavel: "João",
-      reason: "Reparo no ar condicionado",
-      status: "resolvido",
+      data: "04/02/2024",
+      horario: "16:00",
+      status: "Resolvido",
+      statusColor: "bg-green-500 hover:bg-green-600",
+      acoes: "more",
     },
   ];
-
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      pendente: { class: "bg-yellow-500", label: "Pendente" },
-      confirmado: { class: "bg-blue-500", label: "Confirmado" },
-      em_processo: { class: "bg-purple-500", label: "Em Processo" },
-      resolvido: { class: "bg-green-500", label: "Resolvido" },
-    }[status];
-
-    return (
-      <Badge className={`${statusConfig?.class} text-white`}>
-        {statusConfig?.label}
-      </Badge>
-    );
-  };
 
   return (
     <div className="w-full mx-auto p-10 flex flex-col gap-6 min-h-[92vh]">
@@ -66,62 +54,163 @@ export default function SchedulePage() {
         </div>
       </div>
       <div className="w-full bg-card rounded-lg p-5">
-        <Card className="p-0 shadow-none">
+        <Card className="border-none shadow-sm">
           <CardContent>
-            <ScrollArea className="h-[600px] pr-4">
-              <div className="space-y-4">
-                {visits.map((visit) => (
-                  <Card key={visit.id} className="p-4 rounded-none">
-                    <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_1fr] gap-4 items-center">
-                      <div>
-                        <p className="font-medium">Motivo</p>
-                        <p className="text-muted-foreground">{visit.reason}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium">Responsável</p>
-                        <p className="text-muted-foreground">
-                          {visit.responsavel}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium">Data criação</p>
-                        <p className="text-muted-foreground">{visit.time}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium">Horário</p>
-                        <p className="text-muted-foreground">
-                          {new Date(visit.date).toLocaleDateString("pt-BR")}
-                        </p>
-                      </div>
-                      <div className="flex items-center justify-between gap-2">
-                        {getStatusBadge(visit.status)}
-                        {visit.status === "pendente" && (
-                          <div className="flex gap-2">
+            {/* Versão para desktop e tablet */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-muted-foreground/10">
+                    <th className="text-left py-4 font-medium text-sm text-gray-500">
+                      Motivo
+                    </th>
+                    <th className="text-left py-4 font-medium text-sm text-gray-500">
+                      Responsável
+                    </th>
+                    <th className="text-left py-4 font-medium text-sm text-gray-500">
+                      Data da visita
+                    </th>
+                    <th className="text-left py-4 font-medium text-sm text-gray-500">
+                      Horário
+                    </th>
+                    <th className="text-right py-4 font-medium text-sm text-gray-500"></th>
+                    <th className="text-right py-4 font-medium text-sm text-gray-500"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {agendamentos.map((item, index) => (
+                    <tr key={index} className="border-b border-muted-foreground/10">
+                      <td className="py-4">
+                        <div className="font-medium">Motivo</div>
+                        <div className="text-sm text-muted-foreground">
+                          {item.motivo}
+                        </div>
+                      </td>
+                      <td className="py-4">
+                        <div className="text-sm">{item.responsavel}</div>
+                      </td>
+                      <td className="py-4">
+                        <div className="text-sm">{item.data}</div>
+                      </td>
+                      <td className="py-4">
+                        <div className="text-sm">{item.horario}</div>
+                      </td>
+                      <td className="py-4">
+                        <Badge className={item.statusColor}>
+                          {item.status}
+                        </Badge>
+                      </td>
+                      <td className="py-4 text-right">
+                        <div className="flex justify-end space-x-2">
+                          {item.acoes === "check-x" && (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-green-500"
+                              >
+                                <Check className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-red-500"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </>
+                          )}
+                          {item.acoes === "clock" && (
                             <Button
+                              variant="ghost"
                               size="icon"
-                              variant="outline"
+                              className="h-8 w-8 text-purple-500"
+                            >
+                              <Clock className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {item.acoes === "more" && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
                               className="h-8 w-8"
                             >
-                              <CheckCircle className="h-4 w-4 text-green-500" />
+                              <MoreVertical className="h-4 w-4" />
                             </Button>
-                            <Button
-                              size="icon"
-                              variant="outline"
-                              className="h-8 w-8"
-                            >
-                              <XCircle className="h-4 w-4 text-red-500" />
-                            </Button>
-                          </div>
-                        )}
-                        {visit.status === "em_processo" && (
-                          <Clock className="h-5 w-5 text-purple-500" />
-                        )}
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Versão para mobile */}
+            <div className="md:hidden space-y-4">
+              {agendamentos.map((item, index) => (
+                <Card key={index} className="overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="p-4 border-b border-muted-foreground/10">
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="font-medium">{item.motivo}</div>
+                        <Badge className={item.statusColor}>
+                          {item.status}
+                        </Badge>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">Responsável:</span>{" "}
+                          {item.responsavel}
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Data:</span>{" "}
+                          {item.data}
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Horário:</span>{" "}
+                          {item.horario}
+                        </div>
                       </div>
                     </div>
-                  </Card>
-                ))}
-              </div>
-            </ScrollArea>
+                    <div className="flex justify-end p-2 bg-gray-50">
+                      {item.acoes === "check-x" && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-green-500"
+                          >
+                            <Check className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-red-500"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
+                      {item.acoes === "clock" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-purple-500"
+                        >
+                          <Clock className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {item.acoes === "more" && (
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
